@@ -4,13 +4,7 @@
   <!-- TODO: replace with the real URL this pack is hosted/distributed from -->
   <url>https://www.ashling.com/</url>
   <name>QEMU32_RISCV_PicoJPEG</name>
-  <description>
-  Bare-metal RV32IA picojpeg JPEG-decode example, built with CMake and run/debugged
-  under QEMU's "virt" machine model. Provided as an Open-CMSIS-Pack example only;
-  it does not describe a device or board, since Open-CMSIS-Pack's device model
-  (Dcore, Dfpu, Dmpu, Dtz, ...) is specific to Arm Cortex-M/R/A cores and has no
-  representation for RISC-V targets.
-  </description>
+  <description>Bare-metal RV32IA picojpeg JPEG-decode example, built with CMake, run under QEMU's virt machine model.</description>
   <license>LICENSE.txt</license>
 
   <releases>
@@ -29,26 +23,16 @@
     <keyword>CMake</keyword>
   </keywords>
 
-  <boards>
-    <!-- Described in prose only: Open-CMSIS-Pack's mountedDevice/processor model
-         (Dcore, Dfpu, Dmpu, Dtz, ...) is Arm Cortex-M/R/A specific and has no
-         representation for a RISC-V core, so no device is declared here. -->
-    <board vendor="Generic" name="QEMU RISC-V virt">
-      <description>
-      QEMU's "virt" machine model, run as: qemu-system-riscv32 -machine virt.
-      RV32IA core; a single RAM region is mapped at 0x80000000 (size defined by
-      src/link.ld). No fixed devices/peripherals are modelled by this pack.
-      </description>
-    </board>
-  </boards>
+  <!-- No <boards> section: packchk requires every declared board to have a
+       <mountedDevices> entry, but Open-CMSIS-Pack's device model (Dcore, Dfpu,
+       Dmpu, Dtz, ...) is Arm Cortex-M/R/A specific and has no representation
+       for a RISC-V core. The target (QEMU's "virt" machine, RV32IA, RAM at
+       0x80000000 per src/link.ld) is documented in prose below and in
+       Abstract.txt instead. -->
 
   <examples>
     <example name="picojpeg" doc="Abstract.txt" folder=".">
-      <description>
-      Decode a JPEG image with the picojpeg baseline decoder on bare-metal RV32IA,
-      running under QEMU's "virt" machine (RAM at 0x80000000, see src/link.ld).
-      </description>
-      <board vendor="Generic" name="QEMU RISC-V virt"/>
+      <description>Decode a JPEG image with picojpeg on bare-metal RV32IA, running under QEMU's virt machine.</description>
       <project>
         <environment name="cmake" load="CMakeLists.txt"/>
       </project>
