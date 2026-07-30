@@ -1,0 +1,68 @@
+{
+    "configurations": [
+        {
+            "logging": {
+                "engineLogging": "error"
+            },
+            "name": "qemu-debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\build\\picojpeg.elf",
+            "args": [],
+            "stopAtConnect": true,
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "${config:ashling.installationPath}\\toolchain\\riscv\\riscv64-unknown-elf\\bin\\riscv64-unknown-elf-gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set RISC-V architecture",
+                    "text": "set arch riscv:rv32",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set remote timeout",
+                    "text": "set remotetimeout 250",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Disable thread event printing",
+                    "text": "set print thread-events off",
+                    "ignoreFailures": true
+                }
+            ],
+            "postRemoteConnectCommands": [
+                {
+                    "description": "Remove the default `break -f main` inserted by cppdbg (github issue: vscode-cpptools#8011)",
+                    "text": "delete 1",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Load command",
+                    "text": "load",
+                    "ignoreFailures": true
+                }
+            ],
+            "miDebuggerServerAddress": "localhost:1234",
+            "serverLaunchTimeout": 5000,
+            "debugServerArgs": "--gdb tcp::1234 --machine virt --nographic -S --bios none -d cpu_reset",
+            "debugServerPath": "${config:ashling.installationPath}\\qemu\\qemu-system-riscv32.exe",
+            "filterStderr": true,
+            "hardwareBreakpoints": {
+                "require": false,
+                "limit": 4
+            },
+            "symbolLoadInfo": {
+                "loadAll": true,
+                "exceptionList": ""
+            }
+        }
+    ]
+}

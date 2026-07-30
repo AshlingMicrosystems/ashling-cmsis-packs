@@ -1,0 +1,71 @@
+variables:
+  CMSIS_TOOLBOX_VERSION: "2.14.1"
+  PDSC_NAME: "Ashling.QEMU32_RISCV_PicoJPEG.pdsc"
+  PACK_VENDOR: "Ashling"
+
+stages:
+  - validate
+  - build
+  - pages
+
+.fetch_packchk: &fetch_packchk
+  - curl -fsSL "https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases/download/${CMSIS_TOOLBOX_VERSION}/cmsis-toolbox-linux-amd64.tar.gz" -o /tmp/cmsis-toolbox.tar.gz
+  - tar -xzf /tmp/cmsis-toolbox.tar.gz -C /tmp
+  - export PATH="/tmp/cmsis-toolbox-linux-amd64/bin:${PATH}"
+
+validate:
+  stage: validate
+  image: debian:stable-slim
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq curl libxml2-utils >/dev/null
+    - *fetch_packchk
+  script:
+    - xmllint --noout "${PDSC_NAME}"
+    - packchk "${PDSC_NAME}"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH || $CI_COMMIT_TAG'
+
+build_pack:
+  stage: build
+  image: debian:stable-slim
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq curl bash git zip xmlstarlet >/dev/null
+    - *fetch_packchk
+  script:
+    - bash gen_pack.sh
+  artifacts:
+    paths:
+      - output/*.pack
+    expire_in: 1 week
+  rules:
+    - if: '$CI_COMMIT_TAG'
+
+pages:
+  stage: pages
+  image: debian:stable-slim
+  needs:
+    - build_pack
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq xmlstarlet >/dev/null
+  script:
+    - mkdir -p public
+    - cp "${PDSC_NAME}" public/
+    - cp output/*.pack public/
+    - PACK_VERSION=$(xmlstarlet sel -t -v "//releases/release[1]/@version" "${PDSC_NAME}")
+    - |
+      cat > public/index.pidx <<EOF
+      <?xml version="1.0" encoding="UTF-8"?>
+      <index schemaVersion="1.1.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="PackIndex.xsd">
+        <vendor>${PACK_VENDOR}</vendor>
+        <url>${CI_PAGES_URL}/</url>
+        <timestamp>$(date -u +%Y-%m-%dT%H:%M:%S)</timestamp>
+        <pindex>
+          <pdsc url="${CI_PAGES_URL}/" vendor="${PACK_VENDOR}" name="QEMU32_RISCV_PicoJPEG" version="${PACK_VERSION}"/>
+        </pindex>
+      </index>
+      EOF
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: '$CI_COMMIT_TAG'

@@ -1,0 +1,31 @@
+picojpeg (QEMU32 RISC-V) - CMake bare-metal example
+====================================================
+
+Decodes a JPEG image using the picojpeg baseline decoder on a bare-metal
+RV32IA target, running under QEMU's "virt" machine model.
+
+Build system : CMake (out-of-tree, see toolchain.cmake for the cross
+               compiler settings: -march=rv32ia -mabi=ilp32).
+Toolchain    : riscv64-unknown-elf-gcc/g++/gdb.
+Target       : QEMU virt machine, RV32IA, single RAM region at 0x80000000
+               (size set in src/link.ld).
+Debug        : qemu-system-riscv32 started as a GDB server
+               (--machine virt --bios none -S -gdb tcp::1234), attached to
+               with riscv64-unknown-elf-gdb. See .vscode/launch.json.
+
+Building
+--------
+Configure and build with CMake using the "Unix Makefiles" generator (the
+toolchain ships a make.exe with a matching sh.exe/busybox POSIX layer):
+
+    cmake -G "Unix Makefiles" -S . -B build ^
+        -DCMAKE_C_COMPILER=<toolchain>/riscv64-unknown-elf-gcc.exe ^
+        -DCMAKE_CXX_COMPILER=<toolchain>/riscv64-unknown-elf-g++.exe ^
+        -DCMAKE_ASM_COMPILER=<toolchain>/riscv64-unknown-elf-gcc.exe
+    cmake --build build
+
+This produces build/picojpeg.elf and build/picojpeg.elf.objdump.
+
+Running
+-------
+qemu-system-riscv32 -machine virt -nographic -bios none -kernel build/picojpeg.elf

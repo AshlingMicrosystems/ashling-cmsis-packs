@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package schemaVersion="1.7.7" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.7/schema/PACK.xsd">
+  <vendor>Ashling</vendor>
+  <!-- TODO: replace with the real URL this pack is hosted/distributed from -->
+  <url>https://www.ashling.com/</url>
+  <name>QEMU32_RISCV_PicoJPEG</name>
+  <description>
+  Bare-metal RV32IA picojpeg JPEG-decode example, built with CMake and run/debugged
+  under QEMU's "virt" machine model. Provided as an Open-CMSIS-Pack example only;
+  it does not describe a device or board, since Open-CMSIS-Pack's device model
+  (Dcore, Dfpu, Dmpu, Dtz, ...) is specific to Arm Cortex-M/R/A cores and has no
+  representation for RISC-V targets.
+  </description>
+  <license>LICENSE.txt</license>
+
+  <releases>
+    <release version="1.0.0" date="2026-07-29">
+      Initial release: picojpeg RV32IA/QEMU CMake example.
+    </release>
+  </releases>
+
+  <keywords>
+    <keyword>RISC-V</keyword>
+    <keyword>RV32IA</keyword>
+    <keyword>QEMU</keyword>
+    <keyword>PicoJPEG</keyword>
+    <keyword>JPEG</keyword>
+    <keyword>Bare-metal</keyword>
+    <keyword>CMake</keyword>
+  </keywords>
+
+  <boards>
+    <!-- Described in prose only: Open-CMSIS-Pack's mountedDevice/processor model
+         (Dcore, Dfpu, Dmpu, Dtz, ...) is Arm Cortex-M/R/A specific and has no
+         representation for a RISC-V core, so no device is declared here. -->
+    <board vendor="Generic" name="QEMU RISC-V virt">
+      <description>
+      QEMU's "virt" machine model, run as: qemu-system-riscv32 -machine virt.
+      RV32IA core; a single RAM region is mapped at 0x80000000 (size defined by
+      src/link.ld). No fixed devices/peripherals are modelled by this pack.
+      </description>
+    </board>
+  </boards>
+
+  <examples>
+    <example name="picojpeg" doc="Abstract.txt" folder=".">
+      <description>
+      Decode a JPEG image with the picojpeg baseline decoder on bare-metal RV32IA,
+      running under QEMU's "virt" machine (RAM at 0x80000000, see src/link.ld).
+      </description>
+      <board vendor="Generic" name="QEMU RISC-V virt"/>
+      <project>
+        <environment name="cmake" load="CMakeLists.txt"/>
+      </project>
+      <attributes>
+        <category>Getting Started</category>
+      </attributes>
+    </example>
+  </examples>
+</package>
