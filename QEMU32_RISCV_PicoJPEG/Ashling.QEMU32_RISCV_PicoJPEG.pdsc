@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package schemaVersion="1.7.7" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.7/schema/PACK.xsd">
   <vendor>Ashling</vendor>
-  <!-- TODO: replace with the real URL this pack is hosted/distributed from -->
-  <url>https://www.ashling.com/</url>
+  <url>https://ashlingmicrosystems.github.io/ashling-cmsis-packs/QEMU32_RISCV_PicoJPEG/</url>
   <name>QEMU32_RISCV_PicoJPEG</name>
   <description>Bare-metal RV32IA picojpeg JPEG-decode example, built with CMake, run under QEMU's virt machine model.</description>
   <license>LICENSE.txt</license>

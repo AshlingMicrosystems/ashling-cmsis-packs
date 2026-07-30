@@ -1,0 +1,82 @@
+name: QEMU32_RISCV_PicoJPEG pack
+
+on:
+  push:
+    branches: [main]
+    paths: ["QEMU32_RISCV_PicoJPEG/**"]
+  pull_request:
+    paths: ["QEMU32_RISCV_PicoJPEG/**"]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate and build pack
+        uses: Open-CMSIS-Pack/gen-pack-action@main
+        with:
+          working-directory: QEMU32_RISCV_PicoJPEG
+          gen-pack-script: ./gen_pack.sh
+          gen-pack-output: ./output
+          doxygen-version: none
+          pack-artifact-format: pack
+
+  pages:
+    needs: build
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install packchk
+        run: |
+          curl -fsSL "https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases/download/2.14.1/cmsis-toolbox-linux-amd64.tar.gz" -o /tmp/cmsis-toolbox.tar.gz
+          tar -xzf /tmp/cmsis-toolbox.tar.gz -C /tmp
+          echo "/tmp/cmsis-toolbox-linux-amd64/bin" >> "$GITHUB_PATH"
+
+      - name: Build pack
+        working-directory: QEMU32_RISCV_PicoJPEG
+        run: bash gen_pack.sh
+
+      - name: Assemble pack index site
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq xmlstarlet
+          PDSC="QEMU32_RISCV_PicoJPEG/Ashling.QEMU32_RISCV_PicoJPEG.pdsc"
+          PACK_VERSION=$(xmlstarlet sel -t -v "//releases/release[1]/@version" "$PDSC")
+          SITE="public/QEMU32_RISCV_PicoJPEG"
+          mkdir -p "$SITE"
+          cp "$PDSC" "$SITE/"
+          cp QEMU32_RISCV_PicoJPEG/output/*.pack "$SITE/"
+          cat > "$SITE/index.pidx" <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <index schemaVersion="1.1.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="PackIndex.xsd">
+            <vendor>Ashling</vendor>
+            <url>https://ashlingmicrosystems.github.io/ashling-cmsis-packs/QEMU32_RISCV_PicoJPEG/</url>
+            <timestamp>$(date -u +%Y-%m-%dT%H:%M:%S)</timestamp>
+            <pindex>
+              <pdsc url="https://ashlingmicrosystems.github.io/ashling-cmsis-packs/QEMU32_RISCV_PicoJPEG/" vendor="Ashling" name="QEMU32_RISCV_PicoJPEG" version="${PACK_VERSION}"/>
+            </pindex>
+          </index>
+          EOF
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - uses: actions/deploy-pages@v4
+        id: deployment
