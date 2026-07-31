@@ -34,6 +34,8 @@ PACK_BASE_FILES="
   Abstract.txt
   CMakeLists.txt
   toolchain.cmake
+  picojpeg.csolution.yml
+  picojpeg.cproject.yml
 "
 
 # Specify file names to be deleted from pack build directory

@@ -50,6 +50,7 @@
       <board vendor="Generic" name="QEMU RISC-V virt"/>
       <project>
         <environment name="cmake" load="CMakeLists.txt"/>
+        <environment name="csolution" load="picojpeg.csolution.yml"/>
       </project>
       <attributes>
         <category>Getting Started</category>

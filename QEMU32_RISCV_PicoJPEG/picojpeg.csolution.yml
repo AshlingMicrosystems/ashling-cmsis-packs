@@ -1,0 +1,35 @@
+solution:
+  created-for: CMSIS-Toolbox@2.14.1
+  cdefault:
+
+  packs:
+    - pack: Ashling::QEMU32_RISCV_PicoJPEG
+
+  target-types:
+    - type: QEMU32
+      device: Generic::QEMU32
+      compiler: GCC
+      misc:
+        - for-compiler: GCC
+          ASM:
+            - -march=rv32ia
+            - -mabi=ilp32
+          C-CPP:
+            - -march=rv32ia
+            - -mabi=ilp32
+          Link:
+            - -march=rv32ia
+            - -mabi=ilp32
+            - -nostartfiles
+
+  build-types:
+    - type: Debug
+      debug: on
+      optimize: none
+
+    - type: Release
+      debug: off
+      optimize: balanced
+
+  projects:
+    - project: ./picojpeg.cproject.yml

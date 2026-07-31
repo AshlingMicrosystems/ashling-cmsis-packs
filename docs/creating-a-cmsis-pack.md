@@ -34,6 +34,11 @@ the pack stays a plain-environment example (`<environment name="cmake" .../>` in
 case), and it will be installable/clonable but intentionally won't appear in Create
 Solution's dropdown. Document that limitation up front so it isn't rediscovered later.
 
+**Exception:** if you have your *own* build integration and don't need `cbuild` to be
+the thing that compiles the example, you can still add a csolution.yml/cproject.yml
+purely so the example is listed/selectable in Create Solution — see step 11. The
+"no partial win" framing above only applies when `cbuild` itself is expected to succeed.
+
 ## 1. Make the CMake project buildable standalone
 
 IDE integrations often inject CMake variables behind the scenes (compiler paths, extra
@@ -320,9 +325,65 @@ To make the pack discoverable to *other people's* browse/search UI without them 
   them exactly as in steps 3 and 9.
 - The CMSIS Solution extension's **Manage Components and Packs** view should show the
   pack once it's installed via `cpackget` (same pack root).
-- The **Create Solution** dropdown will not show this example — that's expected per
-  step 0, not a bug to chase.
+- The **Create Solution** dropdown won't show this example *unless* you've added a
+  csolution.yml per step 11 — without one, that's expected per step 0, not a bug to
+  chase.
 - Actually building/running the firmware happens outside the CMSIS extension entirely:
   plain `cmake --build` plus (for this project) the existing `.vscode/launch.json`
   QEMU/GDB debug config, or the `qemu-system-riscv32 -kernel ...` command from the
-  pack's own README.
+  pack's own README. This is still true even with step 11 applied — `cbuild` still
+  can't compile RV32IA; only the *listing* changes.
+
+## 11. Optional: add csolution.yml so the example is listed (with your own build integration)
+
+If you have your own build tooling and don't need `cbuild` to actually compile the
+example, you can still add a csolution.yml/cproject.yml purely so it's listed and
+selectable in Create Solution's Templates/Examples dropdown. Two things make this work:
+
+- **`ExampleProjectType`'s `<environment>` element allows `maxOccurs="unbounded"`** —
+  confirmed in the real `PACK.xsd` — so you can add a second environment entry
+  alongside the existing one instead of replacing it:
+  ```xml
+  <project>
+    <environment name="cmake" load="CMakeLists.txt"/>
+    <environment name="csolution" load="picojpeg.csolution.yml"/>
+  </project>
+  ```
+- **The csolution.yml only needs to reference the device/board already in the pdsc** —
+  it doesn't need real, working compiler settings, since nothing is going to invoke
+  `cbuild` against it for a real build:
+  ```yaml
+  solution:
+    created-for: CMSIS-Toolbox@2.14.1
+    packs:
+      - pack: <Vendor>::<PackName>
+    target-types:
+      - type: <TargetTypeName>
+        device: <Dvendor>::<Dname>       # matches <devices><family><device Dname="..."> in the pdsc
+        compiler: GCC
+    build-types:
+      - type: Debug
+        debug: on
+      - type: Release
+        debug: off
+    projects:
+      - project: ./<name>.cproject.yml
+  ```
+  and a matching `<name>.cproject.yml` listing the source `groups`/`files` and a
+  `linker` entry pointing at the real linker script. Scope the linker (and anything
+  else target-specific) with `for-context: +<TargetTypeName>` — not globally — so that
+  adding a second device later (its own `target-types` entry + its own
+  `for-context`-scoped linker line) doesn't require restructuring what's already there.
+
+**Verify without ever invoking `cbuild`** (which would hit the Arm-only toolchain wall):
+```
+csolution.exe list contexts <name>.csolution.yml
+csolution.exe list devices <name>.csolution.yml -f <DeviceName>
+```
+Both are read-only parse/resolve checks against the installed pack — `list contexts`
+confirms the YAML parses (expect `<project>.<BuildType>+<TargetType>` per combination,
+e.g. `picojpeg.Debug+QEMU32`), `list devices` confirms the device resolves from the
+installed pack — without trying to compile anything.
+
+Remember to add the new `.yml` files to `gen_pack.sh`'s `PACK_BASE_FILES` (step 4) —
+otherwise the pdsc ships referencing files that aren't actually in the `.pack`.
