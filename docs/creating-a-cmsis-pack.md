@@ -283,11 +283,23 @@ and branch name before running the push, especially the first time.
 
 ## 9. Publish / install
 
-Once the `pages` job has run at least once on `main`:
+Once the `pages` job has run at least once on `main`, install directly from the hosted
+`.pack` file (verified end-to-end against the live site):
 
 ```
-cpackget add https://<org>.github.io/<repo>/<pack>/index.pidx
+cpackget add -a https://<org>.github.io/<repo>/<pack>/<Vendor>.<Pack>.<version>.pack
 ```
+
+`-a` auto-accepts the pack's embedded license non-interactively — required for
+anything scripted/CI-driven; omit it to be prompted interactively instead.
+
+**`cpackget add` does not take an `index.pidx` URL** — tried it, it 404s against the
+public-index lookup (`the pack is not found in the public index`) rather than fetching
+the pidx directly. It also doesn't take a **remote** `.pdsc` URL — that form only
+accepts a local filesystem path (a remote one fails with a Windows path-parsing error,
+not a network error). The `.pidx` is still worth publishing (step 8) for tooling that
+consumes pack indexes directly, and as the artifact you'd hand to Arm's public index
+registration (below) — just not as a `cpackget add` argument.
 
 For local development before anything is pushed, skip hosting entirely and install
 straight from the working copy:

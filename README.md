@@ -11,10 +11,14 @@ its own `.pdsc`, source, and packaging script.
 ## Installing a pack
 
 ```
-cpackget add https://ashlingmicrosystems.github.io/ashling-cmsis-packs/<pack>/index.pidx
+cpackget add -a https://ashlingmicrosystems.github.io/ashling-cmsis-packs/<pack>/<Vendor>.<Pack>.<version>.pack
 ```
 
-or point `cpackget add` directly at a released `.pack` file.
+(`-a` auto-accepts the pack's embedded license non-interactively; omit it to be
+prompted instead.) Each pack's own README has its exact URL. `index.pidx` is also
+published alongside each pack for tooling that consumes pack indexes directly — but
+`cpackget add` itself only takes a pack id, a `.pack` file/URL, or a local `.pdsc` path,
+not a `.pidx` URL.
 
 ## Adding a new pack to this repository
 

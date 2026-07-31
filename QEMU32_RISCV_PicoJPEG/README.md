@@ -28,11 +28,13 @@ qemu-system-riscv32 -machine virt -nographic -bios none -kernel build/picojpeg.e
 Add this pack with [cpackget](https://github.com/Open-CMSIS-Pack/cpackget):
 
 ```
-cpackget add https://ashlingmicrosystems.github.io/ashling-cmsis-packs/QEMU32_RISCV_PicoJPEG/index.pidx
+cpackget add -a https://ashlingmicrosystems.github.io/ashling-cmsis-packs/QEMU32_RISCV_PicoJPEG/Ashling.QEMU32_RISCV_PicoJPEG.1.0.0.pack
 ```
 
-or point it directly at a released `.pack` file/URL. For local development, install
-straight from your working copy:
+(`-a` auto-accepts the GPL-3.0 embedded license non-interactively; omit it to be
+prompted instead.) Note `cpackget add` does **not** accept an `index.pidx` URL directly
+— only a pack id, a `.pack` file/URL, or a local `.pdsc` path. For local development,
+install straight from your working copy:
 
 ```
 cpackget add QEMU32_RISCV_PicoJPEG/Ashling.QEMU32_RISCV_PicoJPEG.pdsc

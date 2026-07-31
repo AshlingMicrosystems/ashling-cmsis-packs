@@ -114,6 +114,46 @@ run: |
   bash gen_pack.sh
 ```
 
+## 5. Documented install command (`cpackget add <index.pidx URL>`) doesn't work
+
+**Symptom**, once the site was actually live and tested end-to-end for real (not just
+"the files are reachable via `curl`"):
+```
+$ cpackget add https://ashlingmicrosystems.github.io/ashling-cmsis-packs/QEMU32_RISCV_PicoJPEG/index.pidx
+E: the pack is not found in the public index. The command 'cpackget list --public' shows all public packs
+
+$ cpackget add https://.../Ashling.QEMU32_RISCV_PicoJPEG.pdsc
+E: open https://.../Ashling.QEMU32_RISCV_PicoJPEG.pdsc: The filename, directory name,
+or volume label syntax is incorrect.
+```
+
+**Root cause:** the README/guide had documented `cpackget add <pidx-url>` as the install
+command from the start, based on the pidx's *purpose* (it's the pack-index format), not
+on having actually run that exact command against a live URL. In reality `cpackget add`
+only resolves three forms: a pack id looked up against the already-configured public
+index, a **local** `.pdsc` path, or a `.pack` file/URL. A `.pidx` URL isn't one of them —
+it falls through to public-index pack-id resolution and fails not-found. A **remote**
+`.pdsc` URL also isn't supported by that code path despite the general `add --help` text
+suggesting URLs work generally — it does a local-filesystem stat first and errors with a
+Windows path-parsing message, not a network error, which is what gave this away as a
+tooling limitation rather than a transient network issue.
+
+**Fix:** verified the one form that *does* work end-to-end against the live site:
+```
+cpackget add -a https://.../QEMU32_RISCV_PicoJPEG/Ashling.QEMU32_RISCV_PicoJPEG.1.0.0.pack
+```
+(`-a` needed non-interactively — without it, `cpackget` prints the embedded GPL-3.0
+license and, with no TTY to answer `[A]ccept`, auto-declines: "User does not agree with
+the pack's license, not installing it" — not a failure, just a licensing prompt with no
+one there to answer it.) Confirmed with `cpackget list` afterward showing
+`Ashling::QEMU32_RISCV_PicoJPEG@1.0.0` installed from the live URL. Docs corrected
+across `README.md`, `QEMU32_RISCV_PicoJPEG/README.md`, and
+`creating-a-cmsis-pack.md` step 9.
+
+**Lesson:** "the file is reachable via `curl`" is not the same claim as "the tool that's
+supposed to consume it actually accepts that URL in that form" — the latter needs
+running the real command, not just checking the HTTP status code.
+
 ## Summary table
 
 | # | Symptom | Root cause | Fix commit |
@@ -122,6 +162,7 @@ run: |
 | 2 | Node 20 deprecation warning | stale action majors | `3786b16` |
 | 3 | exit 1, xmllint schema failure | `<example>` missing required `<board>` | `a5bc25c` (+ docs `ec3942a`) |
 | 4 | exit 1, pages job | `CMSIS_PACK_ROOT` unset/missing dir | `be5822f` |
+| 5 | `cpackget add <pidx-url>` fails | documented command never actually tested against a live URL | docs-only fix |
 
 ## What to double-check before trusting the *next* green run
 
