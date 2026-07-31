@@ -51,7 +51,11 @@ jobs:
 
       - name: Build pack
         working-directory: QEMU32_RISCV_PicoJPEG
-        run: bash gen_pack.sh
+        env:
+          CMSIS_PACK_ROOT: /home/runner/.cache/arm/packs
+        run: |
+          mkdir -p "${CMSIS_PACK_ROOT}"
+          bash gen_pack.sh
 
       - name: Assemble pack index site
         run: |
