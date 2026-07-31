@@ -25,4 +25,6 @@ or point `cpackget add` directly at a released `.pack` file.
 
 See [docs/creating-a-cmsis-pack.md](docs/creating-a-cmsis-pack.md) for the full
 walkthrough (converting a CMake project, validating, packaging, CI, hosting, and
-testing), using `QEMU32_RISCV_PicoJPEG` as the worked example.
+testing), using `QEMU32_RISCV_PicoJPEG` as the worked example, and
+[docs/ci-pipeline-fixes.md](docs/ci-pipeline-fixes.md) for the incident-by-incident log
+of every CI failure hit while getting that pack's pipeline green.

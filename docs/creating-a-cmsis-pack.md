@@ -183,6 +183,20 @@ This script, run with `bash gen_pack.sh`, re-runs `packchk` and produces
 bundled bash is often 4.x, so this step may only run for real in CI (that's fine; it's
 exactly what CI is for).
 
+Two more traps, both only surface in CI, not on this local dry-run:
+
+- **`chmod +x gen_pack.sh` before committing it.** `gen-pack-action` invokes it directly
+  as `./gen_pack.sh`, not `bash ./gen_pack.sh`. A file created by an editor/write-tool
+  and never marked executable gets committed as git mode `100644`; on the Linux runner
+  that fails with `Process completed with exit code 126` (permission denied). Fix:
+  `git update-index --chmod=+x gen_pack.sh` (verify with `git ls-files -s gen_pack.sh` —
+  should read `100755`), then commit.
+- **`gen_pack.sh` needs `CMSIS_PACK_ROOT` set to an existing directory.** `gen-pack-action`
+  sets this for you (default `/home/runner/.cache/arm/packs`), but if any *other* CI step
+  calls `gen_pack.sh` directly (ours does, in the `pages` job — see step 6), it must
+  `export CMSIS_PACK_ROOT=...` and `mkdir -p "$CMSIS_PACK_ROOT"` itself first, or the
+  gen-pack library aborts with `Error: CMSIS_PACK_ROOT pointing to ... which doesn't exist`.
+
 ## 5. Decide the repo layout
 
 If the repo is meant to hold exactly one pack forever, flat (files at repo root) is
@@ -215,9 +229,11 @@ Two jobs in `.github/workflows/pack.yml`:
   the release's downloadable assets.
 - **`pages`** (push to `main` or manual dispatch only): checkout again, install
   `packchk` directly (curl the Linux release from the CMSIS-Toolbox GitHub releases),
-  rebuild with `gen_pack.sh`, then assemble a `public/<pack>/` folder containing the
-  `.pdsc`, the `.pack`, and a generated `index.pidx` pack index (see step 8), and deploy
-  it via `actions/upload-pages-artifact` + `actions/deploy-pages`.
+  export `CMSIS_PACK_ROOT` and `mkdir -p` it (see the two traps at the end of step 4 —
+  this job calls `gen_pack.sh` directly, so nothing sets this up for free), rebuild with
+  `gen_pack.sh`, then assemble a `public/<pack>/` folder containing the `.pdsc`, the
+  `.pack`, and a generated `index.pidx` pack index (see step 8), and deploy it via
+  `actions/upload-pages-artifact` + `actions/deploy-pages`.
 
 The `index.pidx` is generated inline in the workflow (not by `gen-pack-action`, which
 only handles docs/pack build, not pack-index publishing):
