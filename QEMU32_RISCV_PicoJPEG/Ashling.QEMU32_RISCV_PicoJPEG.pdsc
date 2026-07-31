@@ -22,16 +22,32 @@
     <keyword>CMake</keyword>
   </keywords>
 
-  <!-- No <boards> section: packchk requires every declared board to have a
-       <mountedDevices> entry, but Open-CMSIS-Pack's device model (Dcore, Dfpu,
-       Dmpu, Dtz, ...) is Arm Cortex-M/R/A specific and has no representation
-       for a RISC-V core. The target (QEMU's "virt" machine, RV32IA, RAM at
-       0x80000000 per src/link.ld) is documented in prose below and in
-       Abstract.txt instead. -->
+  <!-- Dcore="other" is the spec's own escape hatch for non-Arm cores (DcoreEnum
+       includes it explicitly). This does NOT mean CMSIS-Toolbox/cbuild can build
+       for it - that still requires an Arm Cortex-M/R/A core, per docs/creating-a-
+       cmsis-pack.md. It only exists so <examples><example><board> (required by
+       the schema) has a real <boards> entry to point at, and that board has the
+       <mountedDevice> packchk requires (M375). -->
+  <devices>
+    <family Dfamily="QEMU32_RISCV" Dvendor="Generic:5">
+      <device Dname="QEMU32">
+        <processor Dcore="other" DcoreVersion="RV32IA"/>
+        <memory name="RAM" start="0x80000000" size="0x8000" access="rwx" default="1" startup="1"/>
+      </device>
+    </family>
+  </devices>
+
+  <boards>
+    <board vendor="Generic" name="QEMU RISC-V virt">
+      <description>QEMU's virt machine model, run as: qemu-system-riscv32 -machine virt.</description>
+      <mountedDevice Dvendor="Generic:5" Dname="QEMU32"/>
+    </board>
+  </boards>
 
   <examples>
     <example name="picojpeg" doc="Abstract.txt" folder=".">
       <description>Decode a JPEG image with picojpeg on bare-metal RV32IA, running under QEMU's virt machine.</description>
+      <board vendor="Generic" name="QEMU RISC-V virt"/>
       <project>
         <environment name="cmake" load="CMakeLists.txt"/>
       </project>
