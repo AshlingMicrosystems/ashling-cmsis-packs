@@ -64,7 +64,8 @@ cmake --build build_verify
 
 ## 2. Write the `.pdsc`
 
-Minimum viable structure for an example-only pack (no components, no devices):
+Structure for an example-only pack whose target has no real Open-CMSIS-Pack device
+(e.g. non-Arm cores like our RV32IA):
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -78,9 +79,32 @@ Minimum viable structure for an example-only pack (no components, no devices):
     <release version="1.0.0" date="YYYY-MM-DD">Initial release.</release>
   </releases>
   <keywords>...</keywords>
+
+  <!-- Required even for a non-Arm target: the schema mandates <example><board>,
+       which needs a real <boards> entry, which needs a <mountedDevice>, which
+       needs a real <devices> entry to point at. Dcore="other" is the spec's own
+       explicit value for this - it does NOT make the target buildable by
+       CMSIS-Toolbox (see step 0); it only satisfies the metadata model. -->
+  <devices>
+    <family Dfamily="QEMU32_RISCV" Dvendor="Generic:5">
+      <device Dname="QEMU32">
+        <processor Dcore="other" DcoreVersion="RV32IA"/>
+        <memory name="RAM" start="0x80000000" size="0x8000" access="rwx" default="1" startup="1"/>
+      </device>
+    </family>
+  </devices>
+
+  <boards>
+    <board vendor="Generic" name="QEMU RISC-V virt">
+      <description>One line.</description>
+      <mountedDevice Dvendor="Generic:5" Dname="QEMU32"/>
+    </board>
+  </boards>
+
   <examples>
     <example name="picojpeg" doc="Abstract.txt" folder=".">
       <description>One line, under 128 chars.</description>
+      <board vendor="Generic" name="QEMU RISC-V virt"/>
       <project>
         <environment name="cmake" load="CMakeLists.txt"/>
       </project>
@@ -90,16 +114,26 @@ Minimum viable structure for an example-only pack (no components, no devices):
 </package>
 ```
 
-Two easy-to-miss traps, both caught by `packchk` (see next step), not by the XML schema:
+Traps hit while building this, in the order they surface:
 
-- **Don't declare a `<boards>` entry unless you can give it `<mountedDevices>`.**
-  `packchk` treats a board without mounted devices as an ERROR (M375). If there's no
-  real device to mount (our RISC-V case), don't declare the board at all — describe the
-  target in prose in the description/README instead.
+- **`<example>` requires a `<board>` child before `<project>` — this is enforced by the
+  real `PACK.xsd`, not just `packchk`.** Skipping it (because there's no real device to
+  mount) validates fine under `packchk`'s own bundled schema check, but fails CI's
+  `xmllint --schema` step with `Element 'project': This element is not expected.
+  Expected is (board)`. Don't try to dodge this by omitting `<boards>`/`<devices>`
+  entirely — model a minimal device with `Dcore="other"` instead (as above). Verify
+  against the *actual* XSD, not just `packchk`, before trusting a fix here — see step 3.
+- **A declared `<boards><board>` needs a `<mountedDevice>`, or `packchk` errors (M375,
+  "No mountedDevices for Board found").** This is what makes the `<devices>` block
+  mandatory too, not just the `<board>` reference.
 - **Keep `<description>` elements single-line and under ~128 chars.** Multi-line text
   trips `packchk`'s "unsupported character" warning (M388); anything over the limit
   trips the length warning (M387). Neither blocks a build, but a clean pack should have
   zero warnings.
+- Expect two residual benign warnings with this minimal a device: **M350** ("No
+  'Startup' component found") since there's no RTE component for it, and **M604**
+  ("no Dcore feature check for 'other'") since it's intentionally not a real core. Both
+  are informational, not errors.
 
 ## 3. Validate with `packchk`
 
@@ -110,8 +144,20 @@ Every CMSIS VS Code extension install ships `packchk` under
 packchk.exe Ashling.QEMU32_RISCV_PicoJPEG.pdsc
 ```
 
-Target: **0 errors, 0 warnings.** Iterate on the pdsc until you get there — don't move
-on with warnings outstanding; they're cheap to fix now and easy to forget later.
+Target: **0 errors, 0 warnings** (or only the benign ones noted in step 2 for a
+minimal/no-real-device pack). Iterate on the pdsc until you get there.
+
+**`packchk`'s own "Xerxes schema check" passing is not proof the pdsc is schema-valid.**
+It missed the missing-`<board>` issue above entirely (reported 0 errors both with and
+without it) — only CI's separate `xmllint --schema <the-real-PACK.xsd>` step caught it.
+If `xmllint` isn't available locally, validate with `lxml` instead before trusting a fix:
+
+```python
+from lxml import etree
+schema = etree.XMLSchema(etree.parse("PACK.xsd"))   # fetch the version your pdsc declares
+print(schema.validate(etree.parse("Vendor.Name.pdsc")))
+for e in schema.error_log: print(e)
+```
 
 ## 4. Package with `gen-pack`
 
