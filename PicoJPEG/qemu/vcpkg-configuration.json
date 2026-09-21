@@ -3,7 +3,7 @@
     {
       "kind": "artifact",
       "name": "ashling",
-      "location": "https://github.com/AshlingMicrosystems/ashling-vcpkg-registry"
+      "location": "https://github.com/AshlingMicrosystems/ashling-vcpkg-registry/archive/refs/heads/main.zip"
     }
   ],
   "requires": {
