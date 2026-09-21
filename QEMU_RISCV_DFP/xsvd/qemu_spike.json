@@ -1,0 +1,379 @@
+{
+  "schemaVersion": "0.2.4",
+  "contentVersion": "0.2.0",
+  "headerVersion": "0.2.0",
+  "device": {
+    "QEMU Spike": {
+      "displayName": "QEMU Spike",
+      "description": "",
+      "peripherals": {        
+        "SPI": {
+          "description": "Serial Peripheral Interface",
+          "baseAddress": "0x80004000",
+          "size": "0x1000",
+          "resetMask": "none",
+          "groupName": "spi",
+          "registers": {
+            "SPI_CR": {
+              "description": "SPI Configuration Register",
+              "addressOffset": "0x000",
+              "fields": {
+                "MODEN": {
+                  "description": "Enable SPI Module",
+                  "bitOffset": "0",
+                  "bitWidth": "1",
+                  "resetMask": "0x1",
+                  "resetValue": "0x000",
+				  "enumerations": {
+                    "MODEN-enum": {
+                      "description": "Mode enable Enumeration",
+                      "values": {
+                        "0": {
+                          "displayName": "SPI Disabled",
+                          "description": "SPI module is disabled"
+                        },
+                        "1": {
+                          "displayName": "SPI Enabled",
+                          "description": "SPI module is enabled"
+                        }
+                      }
+                    }
+                  }
+                },
+				"HALT": {
+                  "description": "Halt SPI module",
+                  "bitOffset": "1",
+                  "bitWidth": "1",
+                  "resetMask": "0x2",
+                  "resetValue": "0x000",
+				  "enumerations": {
+                    "HALT-enum": {
+                      "description": "Halt Enumeration",
+                      "values": {
+                        "0": {
+                          "displayName": "Not Halted",
+                          "description": "SPI module is not halted"
+                        },
+                        "1": {
+                          "displayName": "Halted",
+                          "description": "SPI module is halted"
+                        }
+                      }
+                    }
+                  }
+                },
+				"MASTER": {
+                  "description": "Enable Master/Slave mode",
+                  "bitOffset": "2",
+                  "bitWidth": "1",
+                  "resetMask": "0x4",
+                  "resetValue": "0x000",
+				  "enumerations": {
+                    "MASTER-enum": {
+                      "description": "MASTER Enumeration",
+                      "values": {
+                        "0": {
+                          "displayName": "Slave mode",
+                          "description": "In slave mode"
+                        },
+                        "1": {
+                          "displayName": "Master mode",
+                          "description": "In master mode"
+                        }
+                      }
+                    }
+                  }
+                },
+				"CONT_SCK": {
+                  "description": "Continuous Clock Mode",
+                  "bitOffset": "3",
+                  "bitWidth": "1",
+                  "resetMask": "0x8",
+                  "resetValue": "0x000",
+				  "enumerations": {
+                    "CONT_SCK-enum": {
+                      "description": "CONT_SCK Enumeration",
+                      "values": {
+                        "0": {
+                          "displayName": "Continuous clock disabled",
+                          "description": "Continuous clock is disabled"
+                        },
+                        "1": {
+                          "displayName": "Continuous clock enabled",
+                          "description": "Continuous clock is enabled"
+                        }
+                      }
+                    }
+                  }
+                },
+				"RFOE": {
+                  "description": "Receive FIFO Overwrite On Overflow Enable",
+                  "bitOffset": "4",
+                  "bitWidth": "1",
+                  "resetMask": "0x10",
+                  "resetValue": "0x000",
+				  "enumerations": {
+                    "RFOE-enum": {
+                      "description": "RFOE Enumeration",
+                      "values": {
+                        "0": {
+                          "displayName": "Receive FIFO overwrite on overflow disabled",
+                          "description": "Receive FIFO overwrite on overflow is disabled"
+                        },
+                        "1": {
+                          "displayName": "Receive FIFO overwrite on overflow enabled",
+                          "description": "Receive FIFO overwrite on overflow is enabled"
+                        }
+                      }
+                    }
+                  }
+                },
+				"MSB": {
+                  "description": "Transmit Byte Order - MSB/LSB first",
+                  "bitOffset": "5",
+                  "bitWidth": "1",
+                  "resetMask": "0x20",
+                  "resetValue": "0x000",
+				  "enumerations": {
+                    "MSB-enum": {
+                      "description": "MSB Enumeration",
+                      "values": {
+                        "0": {
+                          "displayName": "Transmit LSB first",
+                          "description": "Transmit LSB first"
+                        },
+                        "1": {
+                          "displayName": "Transmit MSB first",
+                          "description": "Transmit MSB first"
+                        }
+                      }
+                    }
+                  }
+                },
+				"Reserved": {
+                  "description": "Reserved for future",
+                  "bitOffset": "6",
+                  "bitWidth": "26"
+                }
+              }
+            },
+            "SPI_CRCR": {
+              "description": "SPI Clock Rate Configuration Register",
+              "addressOffset": "0x004",
+              "fields": {
+                "DIVISOR": {
+                  "description": "Divisor for SPI frequency division",
+                  "bitOffset": "0",
+                  "bitWidth": "10",
+                  "resetMask": "0x3FF",
+                  "resetValue": "0x0"
+                },
+                "Reserved": {
+                  "description": "Reserved for future",
+                  "bitOffset": "10",
+                  "bitWidth": "22"
+                }
+              }
+            },
+            "SPI_MCR": {
+              "description": "SPI Mode Configuration Register",
+              "addressOffset": "0x08",
+              "resetMask": "all",
+              "resetValue": "0x00000000",
+              "fields": {
+                "SPOL": {
+                  "description": "SPI Clock Polarity",
+                  "bitOffset": "0",
+                  "bitWidth": "1",
+                  "resetMask": "0x1",
+                  "resetValue": "0x0",
+				  "enumerations": {
+                    "SPOL-enum": {
+                      "description": "SPOL Enumeration",
+                      "values": {
+                        "0": {
+                          "displayName": "Idle state LOW",
+                          "description": "Idle state is LOW"
+                        },
+                        "1": {
+                          "displayName": "Idle state HIGH",
+                          "description": "Idle state is HIGH"
+                        }
+                      }
+                    }
+                  }
+                },
+                "SPHA": {
+                  "description": "SPI Clock Phase",
+                  "bitOffset": "1",
+                  "bitWidth": "1",
+                  "resetMask": "0x2",
+                  "resetValue": "0x0",
+				  "enumerations": {
+                    "SPHA-enum": {
+                      "description": "SPHA Enumeration",
+                      "values": {
+                        "0": {
+                          "displayName": "Rising edge",
+                          "description": "Data is sampled in Rising edge"
+                        },
+                        "1": {
+                          "displayName": "Falling edge",
+                          "description": "Data sampled in Falling edge"
+                        }
+                      }
+                    }
+                  }
+                },
+                "Reserved": {
+                  "description": "Reserved for future",
+                  "bitOffset": "2",
+                  "bitWidth": "30"
+                }
+              }
+            },
+            "SPI_PUSHR": {
+              "description": "SPI Push Register",
+              "addressOffset": "0x00C",
+              "resetMask": "all",
+              "resetValue": "0x00000000"
+            },
+            "SPI_POPR": {
+              "description": "SPI Pop Register",
+              "addressOffset": "0x010",
+              "resetMask": "all",
+              "resetValue": "0x00000000"
+            },
+            "SPI_SR": {
+              "description": "SPI Status Register",
+              "addressOffset": "0x014",
+              "fields": {
+                "TC": {
+                  "description": "Transmit Complete Bit",
+                  "bitOffset": "0",
+                  "bitWidth": "1",
+                  "resetMask": "0x1",
+                  "resetValue": "0x0",
+				  "enumerations": {
+                    "TC-enum": {
+                      "description": "TC Enumeration",
+                      "values": {
+                        "0": {
+                          "displayName": "Transmit in progress",
+                          "description": "Transmit is in progress"
+                        },
+                        "1": {
+                          "displayName": "Transmit complete",
+                          "description": "Transmit is complete"
+                        }
+                      }
+                    }
+                  }
+                },
+                "TFF": {
+                  "description": "Transmit FIFO Full",
+                  "bitOffset": "1",
+                  "bitWidth": "1",
+                  "resetMask": "0x2",
+                  "resetValue": "0x0",
+				  "enumerations": {
+                    "TFF-enum": {
+                      "description": "TFF Enumeration",
+                      "values": {
+                        "0": {
+                          "displayName": "Transmit FIFO not full",
+                          "description": "Transmit FIFO is not full"
+                        },
+                        "1": {
+                          "displayName": "Transmit FIFO full",
+                          "description": "Transmit FIFO is full"
+                        }
+                      }
+                    }
+                  }
+                },
+                "RFF": {
+                  "description": "Receive FIFO Full",
+                  "bitOffset": "2",
+                  "bitWidth": "1",
+                  "resetMask": "0x4",
+                  "resetValue": "0x0",
+				  "enumerations": {
+                    "RFF-enum": {
+                      "description": "RFF Enumeration",
+                      "values": {
+                        "0": {
+                          "displayName": "Receive FIFO not full",
+                          "description": "Receive FIFO is not full"
+                        },
+                        "1": {
+                          "displayName": "Receive FIFO full",
+                          "description": "Receive FIFO is full"
+                        }
+                      }
+                    }
+                  }
+                },
+                "BUSY": {
+                  "description": "Module is busy",
+                  "bitOffset": "3",
+                  "bitWidth": "1",
+                  "resetMask": "0x8",
+                  "resetValue": "0x0",
+				"enumerations": {
+                    "BUSY-enum": {
+                      "description": "BUSY Enumeration",
+                      "values": {
+                        "0": {
+                          "displayName": "Not Busy",
+                          "description": "Module is not busy"
+                        },
+                        "1": {
+                          "displayName": "Busy",
+                          "description": "Module is busy"
+                        }
+                      }
+                    }
+                  }
+                },
+                "PERR": {
+                  "description": "Parity Error",
+                  "bitOffset": "4",
+                  "bitWidth": "1",
+                  "resetMask": "0x10",
+                  "resetValue": "0x0",
+				  "enumerations": {
+                    "PERR-enum": {
+                      "description": "PERR Enumeration",
+                      "values": {
+                        "0": {
+                          "displayName": "None",
+                          "description": "No Parity error"
+                        },
+                        "1": {
+                          "displayName": "Parity error detected",
+                          "description": "Parity error is detected"
+                        }
+                      }
+                    }
+                  }
+                },		
+                "Reserved": {
+                  "description": "Reserved for future",
+                  "bitOffset": "5",
+                  "bitWidth": "27"
+                }
+              }
+            }
+          },
+          "interrupts": {
+            "spi0": {
+              "description": "SPI0 Interrupt",
+              "value": "6"
+            }
+          }
+        }        
+      }
+    }
+  }
+}

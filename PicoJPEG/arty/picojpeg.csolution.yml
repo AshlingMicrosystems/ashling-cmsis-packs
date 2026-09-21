@@ -3,11 +3,12 @@ solution:
   cdefault:
 
   packs:
-    - pack: Ashling::QEMU32_RISCV_PicoJPEG
+    - pack: Ashling::SiFive_E_DFP
+    - pack: Ashling::ArtyA7-100T_BSP
 
   target-types:
-    - type: QEMU32
-      device: Generic::QEMU32
+    - type: ArtyA7
+      device: Generic::E31
       compiler: GCC
       misc:
         - for-compiler: GCC

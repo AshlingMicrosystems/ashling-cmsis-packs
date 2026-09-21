@@ -1,0 +1,8 @@
+ArtyA7-100T_BSP - Digilent Arty A7-100T Board Support Pack
+===========================================================
+
+Declares the Digilent Arty A7-100T FPGA development board, mounted with a
+synthesised SiFive E31 RISC-V core (RV32IMAC), requiring SiFive_E_DFP.
+
+This pack contains no example/source content - it is a board pack only. See
+the PicoJPEG example pack for actual usage.

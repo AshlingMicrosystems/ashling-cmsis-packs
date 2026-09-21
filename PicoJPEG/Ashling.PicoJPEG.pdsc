@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package schemaVersion="1.7.7" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.7/schema/PACK.xsd">
+  <vendor>Ashling</vendor>
+  <url>https://ashlingmicrosystems.github.io/ashling-cmsis-packs/PicoJPEG/</url>
+  <name>PicoJPEG</name>
+  <description>Bare-metal RV32IA picojpeg JPEG-decode example, built with CMake, runnable on QEMU's virt machine model or a Digilent Arty A7-100T board (SiFive E31 core).</description>
+  <license>LICENSE.txt</license>
+
+  <releases>
+    <release version="1.0.0" date="2026-09-21">
+      Initial release as a standalone Generic Software Pack. Renamed from
+      QEMU32_RISCV_PicoJPEG and restructured into qemu/ and arty/ example
+      variants sharing common src/, with device and board declarations moved
+      out into QEMU_RISCV_DFP, QEMU_RISCV_BSP, SiFive_E_DFP, and
+      ArtyA7-100T_BSP so future example packs can reuse them.
+    </release>
+  </releases>
+
+  <keywords>
+    <keyword>RISC-V</keyword>
+    <keyword>RV32IA</keyword>
+    <keyword>QEMU</keyword>
+    <keyword>SiFive</keyword>
+    <keyword>Arty</keyword>
+    <keyword>PicoJPEG</keyword>
+    <keyword>JPEG</keyword>
+    <keyword>Bare-metal</keyword>
+    <keyword>CMake</keyword>
+  </keywords>
+
+  <requirements>
+    <packages>
+      <package name="QEMU_RISCV_DFP" vendor="Ashling"/>
+      <package name="QEMU_RISCV_BSP" vendor="Ashling"/>
+      <package name="SiFive_E_DFP" vendor="Ashling"/>
+      <package name="ArtyA7-100T_BSP" vendor="Ashling"/>
+    </packages>
+  </requirements>
+
+  <examples>
+    <example name="picojpeg-qemu" doc="Abstract.txt" folder="qemu">
+      <description>Decode a JPEG image with picojpeg on bare-metal RV32IA, running under QEMU's virt machine.</description>
+      <board vendor="Generic" name="QEMU RISC-V virt"/>
+      <project>
+        <environment name="cmake" load="CMakeLists.txt"/>
+        <environment name="csolution" load="picojpeg.csolution.yml"/>
+      </project>
+      <attributes>
+        <category>Getting Started</category>
+      </attributes>
+    </example>
+    <example name="picojpeg-arty" doc="Abstract.txt" folder="arty">
+      <description>Decode a JPEG image with picojpeg on bare-metal RV32IA, running on a Digilent Arty A7-100T board (SiFive E31 core).</description>
+      <board vendor="Digilent" name="Arty A7-100T"/>
+      <project>
+        <environment name="cmake" load="CMakeLists.txt"/>
+        <environment name="csolution" load="picojpeg.csolution.yml"/>
+      </project>
+      <attributes>
+        <category>Getting Started</category>
+      </attributes>
+    </example>
+  </examples>
+</package>

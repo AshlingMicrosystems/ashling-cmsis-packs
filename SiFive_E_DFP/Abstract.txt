@@ -1,0 +1,13 @@
+SiFive_E_DFP - SiFive E-Series Device Family Pack
+==================================================
+
+Declares SiFive's E-Series RISC-V cores (E31, E51, FE310) for use by
+CMSIS-Pack-based tooling, using Dcore="other" (the Open-CMSIS-Pack spec's own
+escape hatch for non-Arm cores). Bundles the corresponding Eclipse Embedded
+CDT "xsvd" peripheral register files (xsvd/e31arty-xsvd.json,
+xsvd/e51arty-xsvd.json, xsvd/fe310-xsvd.json) for peripheral-register debug
+views.
+
+This pack contains no example/source content - it is a device-family pack
+only. See the ArtyA7-100T_BSP board pack and the PicoJPEG example pack for
+actual usage.

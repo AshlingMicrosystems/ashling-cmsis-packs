@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package schemaVersion="1.7.7" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.7/schema/PACK.xsd">
+  <vendor>Ashling</vendor>
+  <url>https://ashlingmicrosystems.github.io/ashling-cmsis-packs/SiFive_E_DFP/</url>
+  <name>SiFive_E_DFP</name>
+  <description>Device Family Pack for SiFive's E-Series RISC-V cores (E31, E51, FE310), including peripheral register definitions (xsvd) for each.</description>
+  <license>LICENSE.txt</license>
+
+  <releases>
+    <release version="1.0.0" date="2026-09-21">
+      Initial release: SiFive E-Series device declarations (E31, E51, FE310) and xsvd peripheral register files.
+    </release>
+  </releases>
+
+  <keywords>
+    <keyword>RISC-V</keyword>
+    <keyword>SiFive</keyword>
+    <keyword>E-Series</keyword>
+    <keyword>DFP</keyword>
+  </keywords>
+
+  <!-- Dcore="other" is the spec's own escape hatch for non-Arm cores (DcoreEnum
+       includes it explicitly). Open-CMSIS-Pack's device model does not have a
+       real RISC-V core type; DcoreVersion carries the actual ISA string instead. -->
+  <devices>
+    <family Dfamily="SiFive_E" Dvendor="Generic:5">
+      <device Dname="E31">
+        <description>SiFive E31 Core Complex (RV32IMAC), e.g. synthesised on the Digilent Arty board.</description>
+        <processor Dcore="other" DcoreVersion="RV32IMAC"/>
+      </device>
+      <device Dname="E51">
+        <description>SiFive E51 Core Complex (RV64IMAC), e.g. synthesised on the Digilent Arty board.</description>
+        <processor Dcore="other" DcoreVersion="RV64IMAC"/>
+      </device>
+      <device Dname="FE310">
+        <description>SiFive Freedom E310-G000 SoC, built around the E31 Core Complex (RV32IMAC).</description>
+        <processor Dcore="other" DcoreVersion="RV32IMAC"/>
+      </device>
+    </family>
+  </devices>
+</package>

@@ -26,16 +26,13 @@ DEFAULT_ARGS=()
 # Specify directory names to be added to pack base directory
 PACK_DIRS="
   src
+  qemu
+  arty
 "
 
 # Specify file names to be added to pack base directory
 PACK_BASE_FILES="
   LICENSE.txt
-  Abstract.txt
-  CMakeLists.txt
-  toolchain.cmake
-  picojpeg.csolution.yml
-  picojpeg.cproject.yml
 "
 
 # Specify file names to be deleted from pack build directory

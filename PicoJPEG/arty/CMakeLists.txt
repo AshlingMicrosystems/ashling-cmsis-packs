@@ -9,9 +9,9 @@ add_executable(picojpeg.elf)
 target_sources(picojpeg.elf
     PRIVATE
     	src/init.S
-        src/main.c
-        src/picojpeg_test.c
-        src/libpicojpeg.c
+        ../src/main.c
+        ../src/picojpeg_test.c
+        ../src/libpicojpeg.c
 )
 
 target_include_directories(picojpeg.elf

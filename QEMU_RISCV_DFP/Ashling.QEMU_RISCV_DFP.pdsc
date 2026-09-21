@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package schemaVersion="1.7.7" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.7/schema/PACK.xsd">
+  <vendor>Ashling</vendor>
+  <url>https://ashlingmicrosystems.github.io/ashling-cmsis-packs/QEMU_RISCV_DFP/</url>
+  <name>QEMU_RISCV_DFP</name>
+  <description>Device Family Pack for QEMU's RISC-V virtual machine targets, including the xsvd peripheral register definition for QEMU's spike-derived peripherals.</description>
+  <license>LICENSE.txt</license>
+
+  <releases>
+    <release version="1.0.0" date="2026-09-21">
+      Initial release: extracted from QEMU32_RISCV_PicoJPEG's device declaration, plus the qemu_spike xsvd file.
+    </release>
+  </releases>
+
+  <keywords>
+    <keyword>RISC-V</keyword>
+    <keyword>QEMU</keyword>
+    <keyword>DFP</keyword>
+  </keywords>
+
+  <!-- Dcore="other" is the spec's own escape hatch for non-Arm cores (DcoreEnum
+       includes it explicitly). This does NOT mean CMSIS-Toolbox/cbuild can build
+       for it - that still requires an Arm Cortex-M/R/A core, per docs/creating-a-
+       cmsis-pack.md. -->
+  <devices>
+    <family Dfamily="QEMU32_RISCV" Dvendor="Generic:5">
+      <device Dname="QEMU32">
+        <processor Dcore="other" DcoreVersion="RV32IA"/>
+        <memory name="RAM" start="0x80000000" size="0x8000" access="rwx" default="1" startup="1"/>
+      </device>
+    </family>
+  </devices>
+</package>

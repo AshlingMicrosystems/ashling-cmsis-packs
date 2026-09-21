@@ -1,0 +1,13 @@
+QEMU_RISCV_DFP - QEMU RISC-V Device Family Pack
+================================================
+
+Declares QEMU's RISC-V virtual machine target (QEMU32, RV32IA) for use by
+CMSIS-Pack-based tooling, using Dcore="other" (the Open-CMSIS-Pack spec's own
+escape hatch for non-Arm cores). Bundles the Eclipse Embedded CDT "xsvd"
+peripheral register file for QEMU's spike-derived peripherals
+(xsvd/qemu_spike.json) for peripheral-register debug views.
+
+Extracted from QEMU32_RISCV_PicoJPEG, which previously declared this device
+directly. This pack contains no example/source content - it is a
+device-family pack only. See the QEMU_RISCV_BSP board pack and the PicoJPEG
+example pack for actual usage.

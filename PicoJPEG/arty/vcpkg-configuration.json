@@ -1,0 +1,12 @@
+{
+  "registries": [
+    {
+      "kind": "artifact",
+      "name": "ashling",
+      "location": "https://github.com/AshlingMicrosystems/ashling-vcpkg-registry"
+    }
+  ],
+  "requires": {
+    "ashling:sdks/ashling/risc-v-sdk": "26.3.0"
+  }
+}

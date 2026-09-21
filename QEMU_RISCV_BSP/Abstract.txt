@@ -1,0 +1,9 @@
+QEMU_RISCV_BSP - QEMU RISC-V Virt Board Support Pack
+=====================================================
+
+Declares QEMU's "virt" machine model as a virtual board, mounted with the
+QEMU32 device, requiring QEMU_RISCV_DFP.
+
+Extracted from QEMU32_RISCV_PicoJPEG, which previously declared this board
+directly. This pack contains no example/source content - it is a board pack
+only. See the PicoJPEG example pack for actual usage.

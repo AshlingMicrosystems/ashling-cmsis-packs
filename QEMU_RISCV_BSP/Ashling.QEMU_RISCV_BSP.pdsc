@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package schemaVersion="1.7.7" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.7/schema/PACK.xsd">
+  <vendor>Ashling</vendor>
+  <url>https://ashlingmicrosystems.github.io/ashling-cmsis-packs/QEMU_RISCV_BSP/</url>
+  <name>QEMU_RISCV_BSP</name>
+  <description>Board Support Pack for QEMU's RISC-V "virt" machine model, treated as a virtual board.</description>
+  <license>LICENSE.txt</license>
+
+  <releases>
+    <release version="1.0.0" date="2026-09-21">
+      Initial release: extracted from QEMU32_RISCV_PicoJPEG's board declaration.
+    </release>
+  </releases>
+
+  <keywords>
+    <keyword>RISC-V</keyword>
+    <keyword>QEMU</keyword>
+    <keyword>BSP</keyword>
+  </keywords>
+
+  <requirements>
+    <packages>
+      <package name="QEMU_RISCV_DFP" vendor="Ashling"/>
+    </packages>
+  </requirements>
+
+  <boards>
+    <board vendor="Generic" name="QEMU RISC-V virt">
+      <description>QEMU's virt machine model, run as: qemu-system-riscv32 -machine virt.</description>
+      <mountedDevice Dvendor="Generic:5" Dname="QEMU32"/>
+    </board>
+  </boards>
+</package>

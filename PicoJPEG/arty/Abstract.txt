@@ -1,0 +1,34 @@
+picojpeg (Arty A7-100T, SiFive E31) - CMake bare-metal example
+================================================================
+
+Decodes a JPEG image using the picojpeg baseline decoder on a bare-metal
+RV32IA target, running on a Digilent Arty A7-100T FPGA board synthesised
+with a SiFive E31 RISC-V core.
+
+Build system : CMake (out-of-tree, see toolchain.cmake for the cross
+               compiler settings: -march=rv32ia -mabi=ilp32).
+Toolchain    : riscv64-unknown-elf-gcc/g++/gdb.
+Target       : Digilent Arty A7-100T, SiFive E31 core (RV32IMAC), single RAM
+               region (size set in src/link.ld).
+Peripherals  : see the SiFive_E_DFP pack's xsvd/e31arty-xsvd.json for the
+               peripheral register definitions used by a debug view.
+
+Building
+--------
+Configure and build with CMake using the "Unix Makefiles" generator (the
+toolchain ships a make.exe with a matching sh.exe/busybox POSIX layer):
+
+    cmake -G "Unix Makefiles" -S . -B build ^
+        -DCMAKE_C_COMPILER=riscv64-unknown-elf-gcc.exe ^
+        -DCMAKE_CXX_COMPILER=riscv64-unknown-elf-g++.exe ^
+        -DCMAKE_ASM_COMPILER=riscv64-unknown-elf-gcc.exe
+    cmake --build build
+
+This produces build/picojpeg.elf and build/picojpeg.elf.objdump.
+
+Running
+-------
+Program the resulting picojpeg.elf onto the Arty A7-100T board via your JTAG
+probe / debug launch configuration (not yet included in this pack - to be
+added separately, referencing SiFive_E_DFP's bundled xsvd for the
+peripheral-register view).
