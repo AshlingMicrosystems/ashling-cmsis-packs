@@ -15,7 +15,7 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
-            "miDebuggerPath": "${config:ashling.installationPath}\\toolchain\\riscv\\riscv64-unknown-elf\\bin\\riscv64-unknown-elf-gdb.exe",
+            "miDebuggerPath": "riscv64-unknown-elf-gdb.exe",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -53,7 +53,7 @@
             "miDebuggerServerAddress": "localhost:1234",
             "serverLaunchTimeout": 5000,
             "debugServerArgs": "--gdb tcp::1234 --machine virt --nographic -S --bios none -d cpu_reset",
-            "debugServerPath": "${config:ashling.installationPath}\\qemu\\qemu-system-riscv32.exe",
+            "debugServerPath": "qemu-system-riscv32.exe",
             "filterStderr": true,
             "hardwareBreakpoints": {
                 "require": false,

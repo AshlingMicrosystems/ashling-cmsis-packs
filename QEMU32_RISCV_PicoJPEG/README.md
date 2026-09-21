@@ -5,17 +5,42 @@ under QEMU's "virt" machine model. Distributed as an [Open-CMSIS-Pack](https://o
 
 See [Abstract.txt](Abstract.txt) for the full technical description.
 
+## Toolchain setup
+
+This project's RISC-V GCC toolchain and QEMU are resolved via a
+[vcpkg artifact registry](https://github.com/AshlingMicrosystems/ashling-vcpkg-registry)
+(see `vcpkg-configuration.json`) rather than a fixed install path. Before building,
+running, or debugging, activate the toolchain in your terminal:
+
+```
+vcpkg activate
+```
+
+This adds `riscv64-unknown-elf-gcc`/`-gdb` and `qemu-system-riscv32` to `PATH` for
+**that shell and its subprocesses only**. If you're using VS Code's integrated
+terminal or debugger, open a **new** terminal (or restart VS Code) after activating
+— an already-open terminal or already-running VS Code process won't see the update.
+
 ## Building
 
 ```
 cmake -G "Unix Makefiles" -S . -B build ^
-    -DCMAKE_C_COMPILER=<toolchain>/riscv64-unknown-elf-gcc.exe ^
-    -DCMAKE_CXX_COMPILER=<toolchain>/riscv64-unknown-elf-g++.exe ^
-    -DCMAKE_ASM_COMPILER=<toolchain>/riscv64-unknown-elf-gcc.exe
+    -DCMAKE_C_COMPILER=riscv64-unknown-elf-gcc.exe ^
+    -DCMAKE_CXX_COMPILER=riscv64-unknown-elf-g++.exe ^
+    -DCMAKE_ASM_COMPILER=riscv64-unknown-elf-gcc.exe
 cmake --build build
 ```
 
 This produces `build/picojpeg.elf`.
+
+## Building with cbuild (experimental)
+
+`build-cbuild.ps1` wraps `vcpkg activate` plus CMSIS-Toolbox's own toolchain
+registration (`GCC_TOOLCHAIN_12_1_0`, `CMSIS_COMPILER_ROOT`) and runs
+`cbuild picojpeg.csolution.yml --packs`. This is project-local, first-of-its-kind
+wiring of a non-Arm GCC into CMSIS-Toolbox (see `cmsis-toolchain-config\GCC.12.1.0.cmake`)
+— not an upstream-supported CMSIS-Toolbox feature — so it may need troubleshooting.
+The plain CMake build above remains the primary, proven path.
 
 ## Running
 
