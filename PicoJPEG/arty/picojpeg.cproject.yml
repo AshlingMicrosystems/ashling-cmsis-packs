@@ -7,6 +7,6 @@ project:
     - group: Sources
       files:
         - file: ./src/init.S
-        - file: ../src/main.c
-        - file: ../src/picojpeg_test.c
-        - file: ../src/libpicojpeg.c
+        - file: ./src/main.c
+        - file: ./src/picojpeg_test.c
+        - file: ./src/libpicojpeg.c

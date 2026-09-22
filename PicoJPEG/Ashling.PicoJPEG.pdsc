@@ -9,10 +9,11 @@
   <releases>
     <release version="1.0.0" date="2026-09-21">
       Initial release as a standalone Generic Software Pack. Renamed from
-      QEMU32_RISCV_PicoJPEG and restructured into qemu/ and arty/ example
-      variants sharing common src/, with device and board declarations moved
-      out into QEMU_RISCV_DFP, QEMU_RISCV_BSP, SiFive_E_DFP, and
-      ArtyA7-100T_BSP so future example packs can reuse them.
+      QEMU32_RISCV_PicoJPEG and restructured into self-contained qemu/ and
+      arty/ example variants, each with its own src/, with device and board
+      declarations moved out into QEMU_RISCV_DFP, QEMU_RISCV_BSP,
+      SiFive_E_DFP, and ArtyA7-100T_BSP so future example packs can reuse
+      them.
     </release>
   </releases>
 

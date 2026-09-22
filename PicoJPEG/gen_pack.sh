@@ -25,7 +25,6 @@ DEFAULT_ARGS=()
 
 # Specify directory names to be added to pack base directory
 PACK_DIRS="
-  src
   qemu
   arty
 "

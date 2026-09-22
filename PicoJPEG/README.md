@@ -47,11 +47,12 @@ This produces `build/picojpeg.elf`.
 
 ## Building with cbuild (experimental)
 
-Each variant's `build-cbuild.ps1` wraps `vcpkg activate` plus CMSIS-Toolbox's
-own toolchain registration (`GCC_TOOLCHAIN_12_1_0`, `CMSIS_COMPILER_ROOT`)
-and runs `cbuild picojpeg.csolution.yml --packs`. This is project-local,
-first-of-its-kind wiring of a non-Arm GCC into CMSIS-Toolbox (see each
-variant's `cmsis-toolchain-config\GCC.12.1.0.cmake`) — not an
+Each variant's `build-cbuild.ps1` runs `vcpkg activate` (which registers
+`GCC_TOOLCHAIN_12_1_0` itself, via the riscv-toolchain artifact's own
+`exports.tools`), sets `CMSIS_COMPILER_ROOT` to this project's own toolchain
+config, and runs `cbuild picojpeg.csolution.yml --packs`. This is
+project-local, first-of-its-kind wiring of a non-Arm GCC into CMSIS-Toolbox
+(see each variant's `cmsis-toolchain-config\GCC.12.1.0.cmake`) — not an
 upstream-supported CMSIS-Toolbox feature — so it may need troubleshooting.
 The plain CMake build above remains the primary, proven path.
 
@@ -101,5 +102,6 @@ mechanism.
 
 ## License
 
-See [LICENSE.txt](LICENSE.txt) (GPL-3.0-or-later). Files under `src/` carry Embecosm/
-University of Bristol (Embench) copyright notices under the same license.
+See [LICENSE.txt](LICENSE.txt) (GPL-3.0-or-later). Files under each variant's `src/`
+carry Embecosm/University of Bristol (Embench) copyright notices under the
+same license.
