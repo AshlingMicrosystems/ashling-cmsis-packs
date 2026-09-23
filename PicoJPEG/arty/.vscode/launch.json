@@ -1,0 +1,55 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "SiFive-E-Debug",
+            "gdb": "riscv64-unknown-elf-gdb.exe",
+            "request": "launch",
+            "type": "gdbtarget",
+            "imageAndSymbols": {
+                "symbolFileName": "${workspaceFolder}\\build\\picojpeg.elf",
+                "imageFileName": "${workspaceFolder}\\build\\picojpeg.elf"
+            },
+            "target": {
+                "host": "localhost",
+                "port": "38412",
+                "server": "ash-riscv-gdb-server.exe",
+                "serverStartupDelay": 5000,
+                "serverParameters": [
+                    "--gdb-port",
+                    "38412",
+                    "--transport-type",
+                    "jtag",
+                    "--device",
+                    "sifive-e",
+                    "--jtag-frequency",
+                    "1000KHz",
+                    "--tap-number",
+                    "1",
+                    "--core-number",
+                    "0",
+                    "--attach-mode",
+                    "OFF",
+                    "--probe-type",
+                    "jtag-over-tcpip",
+                    "--instance",
+                    "jtag-over-tcpip"
+                ]
+            },
+            "preRunCommands": [
+                "-break-insert -t main"
+            ],
+            "initCommands": [
+                "-gdb-set breakpoint pending on",
+                "-enable-pretty-printing",
+                "-gdb-set python print-stack none",
+                "-gdb-set print object on",
+                "-gdb-set print sevenbit-strings on",
+                "-gdb-set dprintf-style call",
+                "-gdb-set record full stop-at-limit off",
+                "-gdb-set auto-solib-add on"
+            ],
+            "program": "${workspaceFolder}\\build\\picojpeg.elf"
+        }
+    ]
+}

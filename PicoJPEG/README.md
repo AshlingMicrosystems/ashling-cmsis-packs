@@ -56,6 +56,12 @@ project-local, first-of-its-kind wiring of a non-Arm GCC into CMSIS-Toolbox
 upstream-supported CMSIS-Toolbox feature — so it may need troubleshooting.
 The plain CMake build above remains the primary, proven path.
 
+`vcpkg-configuration.json` also pulls `ninja` from Arm's own artifact
+registry (`https://artifacts.tools.arm.com/vcpkg-registry`,
+`arm:tools/ninja-build/ninja`) so it's guaranteed on `PATH` after `vcpkg
+activate` — `cbuild` defaults to the Ninja generator, so no explicit
+`--generator` flag is needed.
+
 ## Running (qemu/)
 
 ```

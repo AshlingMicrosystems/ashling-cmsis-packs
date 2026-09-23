@@ -4,9 +4,15 @@
       "kind": "artifact",
       "name": "ashling",
       "location": "https://github.com/AshlingMicrosystems/ashling-vcpkg-registry/archive/refs/heads/main.zip"
+    },
+    {
+      "kind": "artifact",
+      "name": "arm",
+      "location": "https://artifacts.tools.arm.com/vcpkg-registry"
     }
   ],
   "requires": {
-    "ashling:sdks/ashling/risc-v-sdk": "26.3.0"
+    "ashling:sdks/ashling/risc-v-sdk": "26.3.0",
+    "arm:tools/ninja-build/ninja": "^1.13.2"
   }
 }
